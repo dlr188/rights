@@ -1,16 +1,21 @@
 <template>
-  <div id="app">
-    <router-link to='goods'>商品列表</router-link>
-    <router-view/>
-  </div>
+    <router-view></router-view>
 </template>
 
 <script>
+import Login from 'components/Login'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+  }
 }
 </script>
 
 <style>
-@import './main.css';
+@import 'assets/css/main.css';
+body,html{
+  height:100%;
+  width:100%;
+}
 </style>
