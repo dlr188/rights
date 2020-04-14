@@ -8,6 +8,8 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 // icon
 import 'assets/fonts/iconfont.css'
+import {dataFormat} from 'common/filter/dataFormat'
+
 import {http} from 'common/http'
 Vue.prototype.$http=http;
 // 使用ElementUI   第二步
@@ -19,6 +21,19 @@ Vue.use(ElementUI);
 // ------message 自己封装的提示消息插件
 // import toastmessage from 'common/Message' 
 // Vue.use(toastmessage)
+// 富文本编辑器  1
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.filter('dataFormat',function(date){
+  return dataFormat(date)
+})
+// 富文本编辑器  2
+Vue.use(VueQuillEditor)
+
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */

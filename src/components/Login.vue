@@ -53,7 +53,7 @@ export default {
           // 方法一：未封装
           // let {data:data} = await this.$axios.post('login', this.login)
           // 方法二：  2.1
-          let {data:res} = await this.$http({url:'login',method: 'POST',params:this.login})
+          let {data:res} = await this.$http({url:'login',method: 'POST',data:this.login})
           console.log(res)
           if(res.meta.status!==200){
             // 组件插件后使用
