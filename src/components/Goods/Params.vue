@@ -24,7 +24,7 @@
                 <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable
                   @close="handleClose(i, scope.row)">{{item}}</el-tag>
                 <el-input class="input-new-tag" v-if="scope.row.inputVisible" v-model="scope.row.inputValue"
-                  ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(scope.row)"
+                  ref="saveTagInput" style="width:120px" @keyup.enter.native="handleInputConfirm(scope.row)"
                   @blur="handleInputConfirm(scope.row)"></el-input>
                 <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)"
                 >+ New Tag</el-button>
@@ -51,8 +51,8 @@
                 <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable
                   @close="handleClose(i, scope.row)">{{item}}</el-tag>
                 <el-input class="input-new-tag" v-if="scope.row.inputVisible" v-model="scope.row.inputValue"
-                  ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(scope.row)"
-                  @blur="handleInputConfirm(scope.row)"></el-input>
+                  ref="saveTagInput" @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)" style="width:120px"></el-input>
                 <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)"
                 >+ New Tag</el-button>
               </template>
@@ -258,7 +258,39 @@ export default {
       }).catch(()=>{
         this.$message.info('已取消删除')
       })  
-    }
+    },
+    handleClose(i,row){
+      row.attr_vals.splice(i,1)
+      this.saveAttrVals(row)
+    },
+    async saveAttrVals (row) {
+      const { data: res } = await this.$http({url:`categories/${this.cateId}/attributes/${row.attr_id}`,
+        data:{attr_name: row.attr_name,attr_sel: row.attr_sel,attr_vals: row.attr_vals.join(' ')},method:'put'})
+      if (res.meta.status !== 200) return this.$message.error('修改参数项失败！')
+      this.$message.success('修改参数项成功！')
+    },
+    // 点击按钮显示输入框
+    showInput (row) {
+      row.inputVisible = true
+      // $nextTick方法的作用：当页面元素被重新渲染之后，才会至指定回调函数中的代码
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.focus()
+      })
+    },
+    //  文本框失去焦点,或者按下Enter触发
+    handleInputConfirm (row) {
+      // 输入的内容为空时，清空
+      if (!row.inputValue.trim()) {
+        row.inputValue = ''
+        row.inputVisible = false
+        return
+      }
+      row.attr_vals.push(row.inputValue.trim())
+      row.inputValue = ''
+      row.inputVisible = false
+      // 提交数据库，保存修改
+      this.saveAttrVals(row)
+    },
   }
 }
 </script>
@@ -269,5 +301,9 @@ export default {
 }
 .el-alert{
   margin-bottom:20px
+}
+.el-tag{
+  margin:5px
+
 }
 </style>
